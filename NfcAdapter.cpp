@@ -176,6 +176,15 @@ boolean NfcAdapter::write(NdefMessage& ndefMessage)
         MifareUltralight mifareUltralight = MifareUltralight(*shield);
         success = mifareUltralight.write(ndefMessage, uid, uidLength);
     }
+    else
+    if (type == TAG_TYPE_4)
+    {
+        #ifdef NDEF_DEBUG
+        Serial.println(F("Writing Mifare Plus"));
+        #endif
+        MifarePlus mifarePlus = MifarePlus(*shield);
+        success = mifarePlus.write(ndefMessage, uid, uidLength);
+    }
     else if (type == TAG_TYPE_UNKNOWN)
     {
 #ifdef NDEF_USE_SERIAL
@@ -207,7 +216,11 @@ unsigned int NfcAdapter::guessTagType()
     //  - ATQA 0x44 && SAK 0x0 - Mifare Ultralight NFC Forum Type 2
     //  - ATQA 0x344 && SAK 0x20 - NFC Forum Type 4
 
-    if (uidLength == 4)
+    if (ATQA == 0x44 && SAK == 0x20)
+    {
+        return TAG_TYPE_4;
+    }
+    else if (uidLength == 4)
     {
         return TAG_TYPE_MIFARE_CLASSIC;
     }

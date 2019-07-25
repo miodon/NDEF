@@ -9,6 +9,7 @@
 // Drivers
 #include <MifareClassic.h>
 #include <MifareUltralight.h>
+#include <MifarePlus.h>
 
 #define TAG_TYPE_MIFARE_CLASSIC (0)
 #define TAG_TYPE_1 (1)
@@ -38,6 +39,8 @@ class NfcAdapter {
     private:
         PN532* shield;
         byte uid[7];  // Buffer to store the returned UID
+        uint16_t ATQA;
+        uint8_t SAK;
         unsigned int uidLength; // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
         unsigned int guessTagType();
 };
