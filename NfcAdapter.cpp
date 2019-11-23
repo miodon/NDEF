@@ -43,12 +43,13 @@ boolean NfcAdapter::tagPresent(unsigned long timeout)
 
     if (timeout == 0)
     {
-        success = shield->readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, (uint8_t*)&uidLength);
+                // default value in PNE532lib is 1000
+                timeout = 1000;
     }
-    else
-    {
-        success = shield->readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, (uint8_t*)&uidLength, timeout);
-    }
+
+    // aligot why do I need inlisted @true ?  FIXME
+    success = shield->readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, (uint8_t*)&uidLength, timeout, true, &ATQA, &SAK);
+
     return success;
 }
 
@@ -94,6 +95,15 @@ boolean NfcAdapter::clean()
     }
     else
 #endif
+    if (type == TAG_TYPE_4)
+    {
+        #ifdef NDEF_DEBUG
+        Serial.println(F("Cleaning Mifare Plus"));
+        #endif
+        MifarePlus mifarePlus = MifarePlus(*shield);
+        return mifarePlus.clean();
+    }
+    else
     if (type == TAG_TYPE_2)
     {
         #ifdef NDEF_DEBUG
@@ -136,6 +146,15 @@ NfcTag NfcAdapter::read()
         MifareUltralight ultralight = MifareUltralight(*shield);
         return ultralight.read(uid, uidLength);
     }
+    else 
+    if (type == TAG_TYPE_4)
+    {
+        #ifdef NDEF_DEBUG
+        Serial.println(F("Reading Mifare Plus"));
+        #endif
+        MifarePlus mifplus = MifarePlus(*shield);
+        return mifplus.read(uid, uidLength);
+    }	
     else if (type == TAG_TYPE_UNKNOWN)
     {
 #ifdef NDEF_USE_SERIAL
