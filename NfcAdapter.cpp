@@ -239,6 +239,10 @@ unsigned int NfcAdapter::guessTagType()
     {
         return TAG_TYPE_4;
     }
+    else if (ATQA == 0x344 && SAK == 0x20)
+    {
+        return TAG_TYPE_4;
+    }
     else if (uidLength == 4)
     {
         return TAG_TYPE_MIFARE_CLASSIC;

@@ -1,5 +1,6 @@
 #ifndef NfcAdapter_h
 #define NfcAdapter_h
+#define NDEF_DEBUG
 
 #include <PN532Interface.h>
 #include <PN532.h>

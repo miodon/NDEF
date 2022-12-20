@@ -1,5 +1,7 @@
 #ifndef MifarePlus_h
 #define MifarePlus_h
+#define MIFARE_PLUS_DEBUG
+
 
 #include <PN532.h>
 #include <NfcTag.h>
